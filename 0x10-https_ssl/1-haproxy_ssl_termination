@@ -46,5 +46,5 @@ frontend ehoneah-frontend-https
 
 backend ehoneah-backend
         balance roundrobin
-        server 63210-web-01 100.25.19.204:80 check
-        server 63210-web-02 54.157.159.85:80 check
+        server 146399-web-01 52.86.142.203:80 check
+        server 146399-web-02 3.85.16.49:80 check
