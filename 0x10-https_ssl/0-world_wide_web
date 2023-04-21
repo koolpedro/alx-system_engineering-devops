@@ -1,18 +1,21 @@
 #!/usr/bin/env bash
-# write a Bash script that will display information about the subdomains
-
-dns_config () {
-    script=$(dig "$2"."$1" | grep -A1 'ANSWER SECTION:' | tr '\t' '\n' | tail -2 | tr '\n' ' ')
-    echo "$2 $script" | awk '{print "The subdomain " $1 " is a " $2 " record and points to " $3}'
+# Display information of domain and subdomain
+# shellcheck disable=SC2086
+info_Domain () {
+    A=$(dig $2.$1 | awk '/ANSWER SECTION:/{getline;print;}')
+    RE=$(echo $A | cut -d' ' -f 4)
+    IP=$(echo $A | cut -d' ' -f 5)
+    echo "The subdomain $2 is a $RE record and points to $IP"
 }
-
-if [ "$#" == 1 ]
+if [ $# -lt 1 ]
 then
-  dns_config "$1" "www"
-  dns_config "$1" "lb-01"
-  dns_config "$1" "web-01"
-  dns_config "$1" "web-02"
-elif [ "$#" == 2 ]
+    echo "Usage: 1-world_wide_web DOMAIN SUBDOMAIN(optional)"
+elif [ $# -eq 1 ]
 then
-  dns_config "$1" "$2"
+    info_Domain "$1" "www"
+    info_Domain "$1" "lb-01"
+    info_Domain "$1" "web-01"
+    info_Domain "$1" "web-02"
+else
+    info_Domain "$1" "$2"
 fi
